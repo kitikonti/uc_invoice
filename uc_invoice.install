@@ -1,0 +1,9 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function uc_invoice_uninstall() {
+  variable_del('uc_invoice_policy');
+}

@@ -1,0 +1,45 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Provides the invoice payment method.
+ */
+
+/**
+ * Implementation of hook_payment_method().
+ */
+function uc_invoice_payment_method() {
+  $methods[] = array(
+    'id' => 'invoice',
+    'name' => t('Invoice'),
+    'title' => t('Invoice'),
+    'desc' => t('Pay after delivery with invoice.'),
+    'callback' => 'uc_payment_method_invoice',
+    'weight' => 1,
+    'checkout' => FALSE,
+    'no_gateway' => TRUE,
+  );
+
+  return $methods;
+}
+
+/**
+ * Handle the invoice payment method.
+ */
+function uc_payment_method_invoice($op, &$arg1) {
+  switch ($op) {
+    case 'cart-details':
+      $details = variable_get('uc_invoice_policy', t('Please pay with the attached invoice.'));
+      return $details;
+
+    case 'settings':
+      $form['uc_invoice_policy'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Policy message'),
+        '#default_value' => variable_get('uc_invoice_policy', t('Please pay with the attached invoice.')),
+        '#description' => t('Help message shown at checkout.'),
+      );
+      return $form;
+  }
+}
